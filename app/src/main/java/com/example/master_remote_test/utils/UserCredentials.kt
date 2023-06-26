@@ -1,4 +1,4 @@
-package com.example.master_remote_test.ui.auth.authclient
+package com.example.master_remote_test.utils
 
 data class UserCredentials(
     val email: String,

@@ -3,4 +3,17 @@
     <string name="common_text_field_error_message">Este campo não pode ser vazio</string>
     <string name="common_text_field_char_limit_place_holder">Limite: %d/%d</string>
     <string name="common_visibility">Visibilidade</string>
+    <string name="common_email">Email</string>
+    <string name="common_password">Senha</string>
+    <string name="common_login">Entrar</string>
+    <string name="common_user">Usuário</string>
+    <string name="common_cancel">Cancelar</string>
+    <string name="common_confirm">Confirmar</string>
+
+
+    <!-- Auth -->
+    <string name="auth_invalid_email_message">Email invalido!</string>
+    <string name="auth_invalid_credentials_message">Verifique suas credenciais!</string>
+    <string name="auth_forgot_password_ask">Esqueceu a senha?</string>
+    <string name="auth_no_account_ask">Não possui uma conta?</string>
 </resources>
