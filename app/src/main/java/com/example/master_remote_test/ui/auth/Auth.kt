@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -19,6 +18,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.master_remote_test.R
+import com.example.master_remote_test.ui.components.DefaultButton
 import com.example.master_remote_test.ui.theme.Master_remote_testTheme
 
 @Composable
@@ -40,10 +40,10 @@ fun AuthenticationScreen(onClickLogin: () -> Unit, onClickRegister: () -> Unit) 
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.default_padding))
         ) {
-            Button(onClick = onClickLogin, modifier = Modifier.fillMaxWidth()) {
+            DefaultButton(onClick = onClickLogin, modifier = Modifier.fillMaxWidth()) {
                 Text(text = stringResource(id = R.string.common_login))
             }
-            Button(onClick = onClickRegister, modifier = Modifier.fillMaxWidth()) {
+            DefaultButton(onClick = onClickRegister, modifier = Modifier.fillMaxWidth()) {
                 Text(text = stringResource(id = R.string.common_register))
             }
         }
