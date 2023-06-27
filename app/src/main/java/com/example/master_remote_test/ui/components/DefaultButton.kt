@@ -18,7 +18,7 @@ fun DefaultButton(
         onClick = onClick,
         modifier = modifier,
         content = content,
-        shape = MaterialTheme.shapes.small
+        shape = MaterialTheme.shapes.medium
     )
 }
 

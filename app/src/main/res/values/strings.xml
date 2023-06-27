@@ -9,7 +9,23 @@
     <string name="common_user">Usuário</string>
     <string name="common_cancel">Cancelar</string>
     <string name="common_confirm">Confirmar</string>
+    <string name="common_exit">Sair</string>
+    <string name="common_off">desativado</string>
+    <string name="common_on">ativado</string>
 
+    <!-- AirplaneMode -->
+    <string name="airplane_mode_prefix">O modo avião esta %s</string>
+
+    <!-- BatterySaver -->
+    <string name="battery_saver_status_prefix">O modo economia de energia esta %s</string>
+
+    <!-- Battery Status-->
+    <string name="battery_status_cold">Fria</string>
+    <string name="battery_status_dead">Morta</string>
+    <string name="battery_status_good">Boa</string>
+    <string name="battery_status_overheat">Superaquecida</string>
+    <string name="battery_status_over_voltage">Sobretensão</string>
+    <string name="battery_status_UNKNOW">Desconhecida</string>
 
     <!-- Auth -->
     <string name="auth_invalid_email_message">Email invalido!</string>
