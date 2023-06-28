@@ -11,12 +11,18 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun CustomCircularProgressbar(progress: Float, text: String, modifier: Modifier = Modifier) {
+fun CustomCircularProgressbar(
+    progress: Float,
+    text: String,
+    modifier: Modifier = Modifier,
+    textColor: Color = MaterialTheme.colorScheme.onBackground
+) {
     val size = 200.dp
     val indicatorThickness = 20.dp
     val progressBackgroundColor = MaterialTheme.colorScheme.primary.copy(0.1f)
@@ -38,7 +44,7 @@ fun CustomCircularProgressbar(progress: Float, text: String, modifier: Modifier 
                 style = Stroke(indicatorThickness.toPx(), cap = StrokeCap.Round)
             )
         }
-        Text(text = text, style = MaterialTheme.typography.titleLarge)
+        Text(text = text, style = MaterialTheme.typography.titleLarge, color = textColor)
 
     }
 }

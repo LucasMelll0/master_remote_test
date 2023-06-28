@@ -5,6 +5,7 @@ package com.example.master_remote_test.ui.dashboard
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.content.res.Configuration.ORIENTATION_LANDSCAPE
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import android.os.PowerManager
 import android.os.PowerManager.ACTION_POWER_SAVE_MODE_CHANGED
@@ -16,6 +17,8 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ExitToApp
 import androidx.compose.material3.Card
@@ -30,21 +33,20 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.master_remote_test.R
 import com.example.master_remote_test.broadcast.DeviceInfoReceiver
 import com.example.master_remote_test.model.BatteryInfo
 import com.example.master_remote_test.ui.components.CustomCircularProgressbar
 import com.example.master_remote_test.ui.components.TextWithIcon
 import com.example.master_remote_test.ui.theme.Master_remote_testTheme
+import com.example.master_remote_test.utils.BatteryHealth
 import org.koin.androidx.compose.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -64,32 +66,112 @@ fun DashboardScreen(viewModel: DashboardViewModel = koinViewModel()) {
     val airplaneModeIsEnabled: Boolean by viewModel.airplaneMode.collectAsStateWithLifecycle()
     val batterySaverIsEnabled: Boolean by viewModel.batterySaverStatus.collectAsStateWithLifecycle()
     Scaffold(topBar = { DefaultTopAppBar(onClickExit = {}) }) { paddingValues ->
-        Column(
-            verticalArrangement = Arrangement.SpaceEvenly,
-            horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier
-                .padding(paddingValues)
-                .fillMaxSize()
-                .background(MaterialTheme.colorScheme.background)
-        ) {
-
-            batteryInfo?.let {
-                CustomCircularProgressbar(progress = it.percent.toFloat(), text = "${it.percent}%")
-                Column(modifier = Modifier.fillMaxWidth()) {
-                    BatteryInfoCard(
-                        it,
-                        modifier = Modifier.padding(horizontal = dimensionResource(id = R.dimen.large_padding))
-                    )
-                    AirplaneModeCard(
-                        isEnabled = airplaneModeIsEnabled, modifier = Modifier
-                            .padding(dimensionResource(id = R.dimen.large_padding))
-                            .fillMaxWidth()
-                    )
-                    BatterySaverCard(
-                        isEnabled = batterySaverIsEnabled,
-                        modifier = Modifier.padding(horizontal = dimensionResource(id = R.dimen.large_padding))
+        batteryInfo?.let {
+            when (LocalConfiguration.current.orientation) {
+                ORIENTATION_LANDSCAPE -> {
+                    DashboardLandscapeOrientation(
+                        batteryInfo = it,
+                        airplaneModeIsEnabled = airplaneModeIsEnabled,
+                        batterySaverIsEnabled = batterySaverIsEnabled,
+                        modifier = Modifier.padding(paddingValues)
                     )
                 }
+
+                else -> DashboardPortraitOrientation(
+                    it,
+                    airplaneModeIsEnabled,
+                    batterySaverIsEnabled,
+                    modifier = Modifier.padding(paddingValues)
+                )
+
+            }
+        }
+    }
+}
+
+@Composable
+private fun DashboardPortraitOrientation(
+    batteryInfo: BatteryInfo,
+    airplaneModeIsEnabled: Boolean,
+    batterySaverIsEnabled: Boolean,
+    modifier: Modifier = Modifier
+) {
+    Column(
+        verticalArrangement = Arrangement.SpaceEvenly,
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = modifier
+            .fillMaxSize()
+            .verticalScroll(rememberScrollState())
+            .background(MaterialTheme.colorScheme.background)
+    ) {
+        CustomCircularProgressbar(
+            progress = batteryInfo.percent.toFloat(),
+            text = "${batteryInfo.percent}%",
+            modifier = Modifier.padding(vertical = dimensionResource(id = R.dimen.large_padding))
+        )
+        Column(modifier = Modifier.fillMaxWidth()) {
+            BatteryInfoCardPortraitOrientation(
+                batteryInfo,
+                modifier = Modifier.padding(horizontal = dimensionResource(id = R.dimen.large_padding))
+            )
+            AirplaneModeCard(
+                isEnabled = airplaneModeIsEnabled, modifier = Modifier
+                    .padding(dimensionResource(id = R.dimen.large_padding))
+                    .fillMaxWidth()
+            )
+            BatterySaverCard(
+                isEnabled = batterySaverIsEnabled,
+                modifier = Modifier.padding(horizontal = dimensionResource(id = R.dimen.large_padding))
+            )
+        }
+    }
+}
+
+@Composable
+fun DashboardLandscapeOrientation(
+    batteryInfo: BatteryInfo,
+    airplaneModeIsEnabled: Boolean,
+    batterySaverIsEnabled: Boolean,
+    modifier: Modifier = Modifier
+) {
+    Column(
+        verticalArrangement = Arrangement.SpaceEvenly,
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = modifier
+            .fillMaxSize()
+            .verticalScroll(rememberScrollState())
+            .background(MaterialTheme.colorScheme.background)
+    ) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceEvenly
+        ) {
+            CustomCircularProgressbar(
+                progress = batteryInfo.percent.toFloat(),
+                text = "${batteryInfo.percent}%",
+                modifier = Modifier
+                    .padding(horizontal = dimensionResource(id = R.dimen.large_padding))
+                    .weight(1f)
+            )
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(1f)
+                    .padding(vertical = dimensionResource(id = R.dimen.large_padding))
+            ) {
+                BatteryInfoCardLandscapeOrientation(
+                    batteryInfo,
+                    modifier = Modifier.padding(horizontal = dimensionResource(id = R.dimen.large_padding))
+                )
+                AirplaneModeCard(
+                    isEnabled = airplaneModeIsEnabled, modifier = Modifier
+                        .padding(dimensionResource(id = R.dimen.large_padding))
+                        .fillMaxWidth()
+                )
+                BatterySaverCard(
+                    isEnabled = batterySaverIsEnabled,
+                    modifier = Modifier.padding(horizontal = dimensionResource(id = R.dimen.large_padding))
+                )
             }
         }
     }
@@ -159,7 +241,7 @@ fun BatterySaverCard(isEnabled: Boolean, modifier: Modifier) {
 }
 
 @Composable
-fun BatteryInfoCard(
+fun BatteryInfoCardPortraitOrientation(
     batteryInfo: BatteryInfo,
     modifier: Modifier = Modifier
 ) {
@@ -208,19 +290,79 @@ fun BatteryInfoCard(
     }
 }
 
-@Suppress("UNCHECKED_CAST")
+@Composable
+fun BatteryInfoCardLandscapeOrientation(
+    batteryInfo: BatteryInfo,
+    modifier: Modifier = Modifier
+) {
+    Card(shape = MaterialTheme.shapes.medium, modifier = modifier.fillMaxWidth()) {
+        Column(
+            horizontalAlignment = Alignment.Start,
+            verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.large_padding)),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(dimensionResource(id = R.dimen.default_padding))
+        ) {
+            Text(text = "Status da bateria")
+            TextWithIcon(
+                icon = painterResource(id = R.drawable.ic_temperature),
+                text = "${batteryInfo.temperature}ºC",
+            )
+            TextWithIcon(
+                icon = painterResource(id = R.drawable.ic_health),
+                text = "Saúde ${stringResource(id = batteryInfo.health.status())}",
+            )
+
+            TextWithIcon(
+                icon = painterResource(id = R.drawable.ic_bolt),
+                text = "${batteryInfo.voltage}v",
+            )
+            TextWithIcon(
+                icon = painterResource(id = R.drawable.ic_battery_charging),
+                text = if (batteryInfo.isCharging) "Carregando" else "desconectado",
+            )
+        }
+    }
+}
+
 @Preview(uiMode = UI_MODE_NIGHT_YES)
 @Preview
 @Composable
-fun DashboardScreenPreview() {
+fun DashboardPortraitOrientationPreview() {
     Master_remote_testTheme {
-        val viewModelFactory = object : ViewModelProvider.AndroidViewModelFactory() {
-            override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                return DashboardViewModel() as T
-            }
-        }
-        val viewModel: DashboardViewModel = viewModel(factory = viewModelFactory)
-        DashboardScreen(viewModel = viewModel)
+        val batteryInfo =
+            BatteryInfo(
+                isCharging = false,
+                percent = 77,
+                temperature = "38",
+                voltage = "3.5",
+                health = BatteryHealth.GOOD
+            )
+        DashboardPortraitOrientation(
+            batteryInfo = batteryInfo,
+            airplaneModeIsEnabled = true,
+            batterySaverIsEnabled = false
+        )
+    }
+}
+
+@Preview(uiMode = ORIENTATION_LANDSCAPE, showSystemUi = true)
+@Composable
+fun DashboardLandscapeOrientationPreview() {
+    Master_remote_testTheme {
+        val batteryInfo =
+            BatteryInfo(
+                isCharging = false,
+                percent = 77,
+                temperature = "38",
+                voltage = "3.5",
+                health = BatteryHealth.GOOD
+            )
+        DashboardLandscapeOrientation(
+            batteryInfo = batteryInfo,
+            airplaneModeIsEnabled = true,
+            batterySaverIsEnabled = false
+        )
     }
 }
 
