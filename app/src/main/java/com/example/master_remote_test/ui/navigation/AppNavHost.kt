@@ -7,15 +7,10 @@ import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.zIndex
 import androidx.navigation.NavHostController
 import com.example.master_remote_test.ui.auth.LoginScreen
-import com.example.master_remote_test.ui.components.LoadingDialog
 import com.example.master_remote_test.ui.dashboard.DashboardScreen
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
@@ -26,13 +21,11 @@ fun AppNavHost(
     navController: NavHostController,
     modifier: Modifier = Modifier
 ) {
-    var isLoading: Boolean by rememberSaveable { mutableStateOf(false) }
     Box(
         modifier = Modifier
             .fillMaxSize()
             .zIndex(1f)
     ) {
-        if (isLoading) LoadingDialog()
     }
     AnimatedNavHost(
         navController = navController, startDestination = Login.route,
@@ -67,7 +60,7 @@ fun AppNavHost(
         }
 
         composable(Dashboard.route) {
-            DashboardScreen()
+            DashboardScreen(onClickExit = { navController.navigateInclusive(Login.route) })
         }
     }
 }

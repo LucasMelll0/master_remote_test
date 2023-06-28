@@ -31,6 +31,9 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
@@ -44,6 +47,7 @@ import com.example.master_remote_test.R
 import com.example.master_remote_test.broadcast.DeviceInfoReceiver
 import com.example.master_remote_test.model.BatteryInfo
 import com.example.master_remote_test.ui.components.CustomCircularProgressbar
+import com.example.master_remote_test.ui.components.DefaultAlertDialog
 import com.example.master_remote_test.ui.components.TextWithIcon
 import com.example.master_remote_test.ui.theme.Master_remote_testTheme
 import com.example.master_remote_test.utils.BatteryHealth
@@ -51,7 +55,8 @@ import org.koin.androidx.compose.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DashboardScreen(viewModel: DashboardViewModel = koinViewModel()) {
+fun DashboardScreen(viewModel: DashboardViewModel = koinViewModel(), onClickExit: () -> Unit) {
+    var showExitAlertDialog by remember { mutableStateOf(false) }
     val context = LocalContext.current
     SetupBroadcastReceiver(viewModel)
     viewModel.updateBatterySaverStatus((context.getSystemService(Context.POWER_SERVICE) as PowerManager).isPowerSaveMode)
@@ -65,7 +70,13 @@ fun DashboardScreen(viewModel: DashboardViewModel = koinViewModel()) {
     val batteryInfo: BatteryInfo? by viewModel.batteryInfo.collectAsStateWithLifecycle()
     val airplaneModeIsEnabled: Boolean by viewModel.airplaneMode.collectAsStateWithLifecycle()
     val batterySaverIsEnabled: Boolean by viewModel.batterySaverStatus.collectAsStateWithLifecycle()
-    Scaffold(topBar = { DefaultTopAppBar(onClickExit = {}) }) { paddingValues ->
+    Scaffold(topBar = { DefaultTopAppBar(onClickExit = { showExitAlertDialog = true }) }) { paddingValues ->
+        if (showExitAlertDialog) DefaultAlertDialog(
+            title = stringResource(id = R.string.common_dialog_title),
+            text = stringResource(id = R.string.auth_exit_confirmation_dialog_text),
+            onDismissRequest = { showExitAlertDialog = false },
+            onConfirm = { onClickExit() }
+        )
         batteryInfo?.let {
             when (LocalConfiguration.current.orientation) {
                 ORIENTATION_LANDSCAPE -> {

@@ -12,6 +12,7 @@
     <string name="common_exit">Sair</string>
     <string name="common_off">desativado</string>
     <string name="common_on">ativado</string>
+    <string name="common_dialog_title">Tem certeza?</string>
 
     <!-- AirplaneMode -->
     <string name="airplane_mode_prefix">O modo avião esta %s</string>
@@ -32,4 +33,5 @@
     <string name="auth_invalid_credentials_message">Verifique suas credenciais!</string>
     <string name="auth_forgot_password_ask">Esqueceu a senha?</string>
     <string name="auth_no_account_ask">Não possui uma conta?</string>
+    <string name="auth_exit_confirmation_dialog_text">Ao confirmar você ira sair da sua conta!</string>
 </resources>
